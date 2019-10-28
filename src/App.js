@@ -1,15 +1,20 @@
-import React, { Suspense } from "react";
+import React, { useState, useEffect } from "react";
 import { fetchProfileData } from "./fakeApi";
 
-const resource = fetchProfileData();
+// kicks in ASAP
+const promise = fetchProfileData();
 
-function ProfileDetails() {
-  const user = resource.user.read();
+function ProfileDetails({ user }) {
+  if (user === null) {
+    return <h1 className="lead">Loading User...</h1>;
+  }
   return <h1>{user.name}</h1>;
 }
 
-function ProfileTimeLine() {
-  const posts = resource.posts.read();
+function ProfileTimeLine({ posts }) {
+  if (posts === null) {
+    return <h1 className="lead">Loading Posts...</h1>;
+  }
   return (
     <ul>
       {posts.map(({ id, text }) => (
@@ -20,13 +25,21 @@ function ProfileTimeLine() {
 }
 
 function ProfilePage() {
+  const [user, setUser] = useState(null);
+  const [posts, setPosts] = useState(null);
+
+  useEffect(() => {
+    promise.then(({ user, posts }) => {
+      setUser(user);
+      setPosts(posts);
+    });
+  }, []);
+
   return (
-    <Suspense fallback={<h1 className="lead">Loading Profile...</h1>}>
-      <ProfileDetails />
-      <Suspense fallback={<h1 className="lead">Loading Posts...</h1>}>
-        <ProfileTimeLine />
-      </Suspense>
-    </Suspense>
+    <>
+      <ProfileDetails user={user} />
+      <ProfileTimeLine posts={posts} />
+    </>
   );
 }
 
