@@ -9,25 +9,24 @@ export function fetchProfileData() {
 
 // Suspense integrations like Relay implement
 // a contract like this to integrate with React.
-// Real implementations can be significantly more complex.
-// Don't copy-paste this into your project!
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then
 function wrapPromise(promise) {
   let status = "pending";
   let result;
   let suspender = promise.then(
-    r => {
+    accepted => {
       status = "success";
-      result = r;
+      result = accepted;
     },
-    e => {
+    rejected => {
       status = "error";
-      result = e;
+      result = rejected;
     }
   );
   return {
     read() {
       if (status === "pending") {
-        throw suspender;
+        throw suspender; // throws a promise => catched by Suspense Boundaries
       } else if (status === "error") {
         throw result;
       } else if (status === "success") {
@@ -57,18 +56,15 @@ function fetchPosts() {
       resolve([
         {
           id: 0,
-          text:
-            "I get by with a little help from my friends"
+          text: "I get by with a little help from my friends"
         },
         {
           id: 1,
-          text:
-            "I'd like to be under the sea in an octupus's garden"
+          text: "I'd like to be under the sea in an octupus's garden"
         },
         {
           id: 2,
-          text:
-            "You got that sand all over your feet"
+          text: "You got that sand all over your feet"
         }
       ]);
     }, 2000);
