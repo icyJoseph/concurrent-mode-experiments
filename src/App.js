@@ -1,15 +1,31 @@
-import React, { Suspense } from "react";
-import { fetchProfileData } from "./fakeApi";
-
-const resource = fetchProfileData();
+import React, { useState, useEffect } from "react";
+import { fetchUser, fetchPosts } from "./fakeApi";
 
 function ProfileDetails() {
-  const user = resource.user.read();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    fetchUser().then(setUser);
+  }, []);
+
+  if (user === null) {
+    return <h1 className="lead">Loading Profile...</h1>;
+  }
+
   return <h1>{user.name}</h1>;
 }
 
 function ProfileTimeLine() {
-  const posts = resource.posts.read();
+  const [posts, setPosts] = useState(null);
+
+  useEffect(() => {
+    fetchPosts().then(setPosts);
+  }, []);
+
+  if (posts === null) {
+    return <h1 className="lead">Loading Posts...</h1>;
+  }
+
   return (
     <ul>
       {posts.map(({ id, text }) => (
@@ -21,12 +37,10 @@ function ProfileTimeLine() {
 
 function ProfilePage() {
   return (
-    <Suspense fallback={<h1 className="lead">Loading Profile...</h1>}>
+    <>
       <ProfileDetails />
-      <Suspense fallback={<h1 className="lead">Loading Posts...</h1>}>
-        <ProfileTimeLine />
-      </Suspense>
-    </Suspense>
+      <ProfileTimeLine />
+    </>
   );
 }
 
