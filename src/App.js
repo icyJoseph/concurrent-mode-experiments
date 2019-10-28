@@ -28,6 +28,7 @@ function ProfilePage() {
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState(null);
 
+  // In a way this is a super set of fetch on render, but for two children
   useEffect(() => {
     promise.then(({ user, posts }) => {
       setUser(user);
