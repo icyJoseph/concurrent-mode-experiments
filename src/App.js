@@ -1,15 +1,20 @@
-import React, { Suspense } from "react";
-import { fetchProfileData } from "./fakeApi";
+import React, { useState, useEffect } from "react";
+import { fetchUser, fetchPosts, getNextId } from "./fakeApi";
 
-const resource = fetchProfileData();
-
-function ProfileDetails() {
-  const user = resource.user.read();
+function ProfileDetails({ user }) {
   return <h1>{user.name}</h1>;
 }
 
-function ProfileTimeLine() {
-  const posts = resource.posts.read();
+function ProfileTimeLine({ id }) {
+  const [posts, setPosts] = useState(null);
+  useEffect(() => {
+    fetchPosts(id).then(setPosts);
+  }, [id]);
+
+  if (posts === null) {
+    return <h1 className="lead">Loading Posts...</h1>;
+  }
+
   return (
     <ul>
       {posts.map(({ id, text }) => (
@@ -19,23 +24,45 @@ function ProfileTimeLine() {
   );
 }
 
-function ProfilePage() {
+function ProfilePage({ id }) {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    fetchUser(id).then(setUser);
+  }, [id]);
+
+  if (user === null) {
+    return <h1 className="lead">Loading Profile...</h1>;
+  }
+
   return (
-    <Suspense fallback={<h1 className="lead">Loading Profile...</h1>}>
-      <ProfileDetails />
-      <Suspense fallback={<h1 className="lead">Loading Posts...</h1>}>
-        <ProfileTimeLine />
-      </Suspense>
-    </Suspense>
+    <>
+      <ProfileDetails user={user} />
+      <ProfileTimeLine id={id} />
+    </>
   );
 }
 
 function App() {
+  const [id, setId] = useState(0);
+
+  const handleClick = () => {
+    const next = getNextId(id);
+    return setId(next);
+  };
+
   return (
-    <div className="container">
-      <h1 className="display-2">Experimental</h1>
-      <ProfilePage />
-    </div>
+    <>
+      <div className="container">
+        <h1 className="display-2">Experimental</h1>
+        <ProfilePage id={id} />
+      </div>
+      <div className="fab-bottom">
+        <button type="button" className="btn btn-primary" onClick={handleClick}>
+          Next
+        </button>
+      </div>
+    </>
   );
 }
 
