@@ -26,6 +26,7 @@ function wrapPromise(promise) {
   return {
     read() {
       if (status === "pending") {
+        console.log("waiting...");
         throw suspender; // throws a promise => catched by Suspense Boundaries
       } else if (status === "error") {
         throw result;
