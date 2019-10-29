@@ -1,7 +1,23 @@
+.full-page,
 .fab-bottom {
-  position: absolute;
-  bottom: 3em;
-  width: 100%;
-  text-align: center;
   right: 0;
+  position: absolute;
+  width: 100%;
+}
+
+.full-page {
+  top: 0;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fab-bottom {
+  bottom: 3em;
+  text-align: center;
+}
+
+.btn-large {
+  min-width: 10em;
 }

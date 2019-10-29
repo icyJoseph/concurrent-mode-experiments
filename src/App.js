@@ -1,4 +1,5 @@
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useState, useTransition } from "react";
+import Spinner from "./Spinner";
 import { fetchUserAndPosts } from "./fakeApi";
 
 const initialResource = fetchUserAndPosts();
@@ -21,11 +22,16 @@ function ProfileTimeLine({ resource }) {
   );
 }
 
+const TRANSITION_CONFIG = { timeoutMs: 3000 };
+
 function ProfilePage() {
   const [resource, setResource] = useState(initialResource);
+  const [startTransition, isPending] = useTransition(TRANSITION_CONFIG);
 
   function handleRefresh() {
-    setResource(fetchUserAndPosts());
+    startTransition(() => {
+      setResource(fetchUserAndPosts());
+    });
   }
 
   return (
@@ -37,12 +43,14 @@ function ProfilePage() {
       <div className="fab-bottom">
         <button
           type="button"
-          className="btn btn-primary"
+          className="btn btn-primary btn-large"
+          disabled={isPending}
           onClick={handleRefresh}
         >
-          Refresh
+          {isPending ? "Refreshing" : "Refresh"}
         </button>
       </div>
+      {isPending && <Spinner />}
     </Suspense>
   );
 }
