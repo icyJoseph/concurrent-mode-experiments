@@ -14,5 +14,6 @@
 
 .fab-bottom {
   bottom: 3em;
+  right: 0;
   text-align: center;
 }

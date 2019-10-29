@@ -1,8 +1,7 @@
-import React, { Suspense, useState, useTransition } from "react";
-import Spinner from "./Spinner";
-import { fetchProfileData, getNextId } from "./fakeApi";
+import React, { Suspense, useState } from "react";
+import { fetchProfileData } from "./fakeApi";
 
-const initialResource = fetchProfileData(0);
+const initialResource = fetchProfileData();
 
 function ProfileDetails({ resource }) {
   // throws Promise, and lets its fiber know that it is pending data
@@ -22,54 +21,57 @@ function ProfileTimeLine({ resource }) {
   );
 }
 
-function ProfilePage({ resource }) {
+function ProfilePage({ resource, showProfile }) {
   return (
-    <Suspense fallback={<h1 className="lead">Loading Profile...</h1>}>
+    <>
       <ProfileDetails resource={resource} />
+      <div className="fab-bottom">
+        <button type="button" className="btn btn-info" onClick={showProfile}>
+          Refresh
+        </button>
+      </div>
       <Suspense fallback={<h1 className="lead">Loading Posts...</h1>}>
         <ProfileTimeLine resource={resource} />
       </Suspense>
-    </Suspense>
+    </>
   );
 }
 
-/**
- *
- * @const startTransition is a function. We’ll use it to tell React which state update we want to defer.
- * @const isPending is a boolean. It’s React telling us whether that transition is ongoing at the moment.
- *
- */
-function App() {
-  // Because, we now have the posts and user resources, inside resource
-  // move the resource to the top level
-  const [resource, setResource] = useState(initialResource);
-  const [startTransition, isPending] = useTransition({ timeoutMs: 3000 });
-
-  const handleClick = () =>
-    // bake this into the Design System!
-    startTransition(() => {
-      const next = getNextId(resource.userId);
-      return setResource(fetchProfileData(next));
-    });
-
+function HomePage({ showProfile }) {
   return (
     <>
-      <div className="container">
-        <h1 className="display-2">Experimental</h1>
-        <ProfilePage resource={resource} />
-      </div>
-      {isPending && <Spinner />}
+      <h1 className="display-3">Home Page</h1>
       <div className="fab-bottom">
-        <button
-          type="button"
-          className="btn btn-primary"
-          disabled={isPending}
-          onClick={handleClick}
-        >
-          Next
+        <button type="button" className="btn btn-primary" onClick={showProfile}>
+          Open Profile
         </button>
       </div>
     </>
+  );
+}
+
+// Kills the whole app to load more posts
+function App() {
+  const [tab, setTab] = useState("home");
+  // Because, we now have the posts and user resources, inside resource
+  // move the resource to the top level
+  const [resource, setResource] = useState(initialResource);
+
+  function showProfile() {
+    setResource(fetchProfileData());
+    setTab("profile");
+  }
+
+  return (
+    <div className="container">
+      <Suspense fallback={<h1 className="lead">Loading the App...</h1>}>
+        {tab === "home" ? (
+          <HomePage showProfile={showProfile} />
+        ) : (
+          <ProfilePage resource={resource} showProfile={showProfile} />
+        )}
+      </Suspense>
+    </div>
   );
 }
 
