@@ -1,6 +1,18 @@
+.full-page,
 .fab-bottom {
   position: absolute;
-  bottom: 3em;
   width: 100%;
+}
+
+.full-page {
+  top: 0;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fab-bottom {
+  bottom: 3em;
   text-align: center;
 }

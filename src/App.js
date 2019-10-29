@@ -1,4 +1,5 @@
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useState, useTransition } from "react";
+import Spinner from "./Spinner";
 import { fetchProfileData, getNextId } from "./fakeApi";
 
 const initialResource = fetchProfileData(0);
@@ -32,15 +33,24 @@ function ProfilePage({ resource }) {
   );
 }
 
+/**
+ *
+ * @const startTransition is a function. We’ll use it to tell React which state update we want to defer.
+ * @const isPending is a boolean. It’s React telling us whether that transition is ongoing at the moment.
+ *
+ */
 function App() {
   // Because, we now have the posts and user resources, inside resource
   // move the resource to the top level
   const [resource, setResource] = useState(initialResource);
+  const [startTransition, isPending] = useTransition({ timeoutMs: 3000 });
 
-  const handleClick = () => {
-    const next = getNextId(resource.userId);
-    return setResource(fetchProfileData(next));
-  };
+  const handleClick = () =>
+    // bake this into the Design System!
+    startTransition(() => {
+      const next = getNextId(resource.userId);
+      return setResource(fetchProfileData(next));
+    });
 
   return (
     <>
@@ -48,8 +58,14 @@ function App() {
         <h1 className="display-2">Experimental</h1>
         <ProfilePage resource={resource} />
       </div>
+      {isPending && <Spinner />}
       <div className="fab-bottom">
-        <button type="button" className="btn btn-primary" onClick={handleClick}>
+        <button
+          type="button"
+          className="btn btn-primary"
+          disabled={isPending}
+          onClick={handleClick}
+        >
           Next
         </button>
       </div>
