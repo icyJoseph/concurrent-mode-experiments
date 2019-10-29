@@ -1,7 +1,24 @@
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useState, useTransition } from "react";
+import Spinner from "./Spinner";
 import { fetchProfileData } from "./fakeApi";
 
 const initialResource = fetchProfileData();
+
+function Button({ children, className, onClick }) {
+  const [startTransition, isPending] = useTransition({ timeoutMs: 8000 });
+
+  function handleClick() {
+    startTransition(() => onClick());
+  }
+
+  return (
+    <>
+      <button type="button" className={`${className} btn-large`} onClick={handleClick}>
+        {isPending ? <Spinner /> : children}
+      </button>
+    </>
+  );
+}
 
 function ProfileDetails({ resource }) {
   // throws Promise, and lets its fiber know that it is pending data
@@ -26,9 +43,9 @@ function ProfilePage({ resource, showProfile }) {
     <>
       <ProfileDetails resource={resource} />
       <div className="fab-bottom">
-        <button type="button" className="btn btn-info" onClick={showProfile}>
+        <Button className="btn btn-info" onClick={showProfile}>
           Refresh
-        </button>
+        </Button>
       </div>
       <Suspense fallback={<h1 className="lead">Loading Posts...</h1>}>
         <ProfileTimeLine resource={resource} />
@@ -42,9 +59,9 @@ function HomePage({ showProfile }) {
     <>
       <h1 className="display-3">Home Page</h1>
       <div className="fab-bottom">
-        <button type="button" className="btn btn-primary" onClick={showProfile}>
+        <Button className="btn btn-primary" onClick={showProfile}>
           Open Profile
-        </button>
+        </Button>
       </div>
     </>
   );

@@ -17,3 +17,12 @@
   right: 0;
   text-align: center;
 }
+
+.btn-large {
+  width: 15em;
+  height: 5em;
+}
+
+.small {
+  font-size: small;
+}
