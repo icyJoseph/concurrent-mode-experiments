@@ -1,7 +1,7 @@
 import React, { Suspense, useState } from "react";
-import { fetchProfileData, getNextId } from "./fakeApi";
+import { fetchUserAndPosts } from "./fakeApi";
 
-const initialResource = fetchProfileData(0);
+const initialResource = fetchUserAndPosts();
 
 function ProfileDetails({ resource }) {
   // throws Promise, and lets its fiber know that it is pending data
@@ -21,37 +21,38 @@ function ProfileTimeLine({ resource }) {
   );
 }
 
-function ProfilePage({ resource }) {
+function ProfilePage() {
+  const [resource, setResource] = useState(initialResource);
+
+  function handleRefresh() {
+    setResource(fetchUserAndPosts());
+  }
+
   return (
     <Suspense fallback={<h1 className="lead">Loading Profile...</h1>}>
       <ProfileDetails resource={resource} />
       <Suspense fallback={<h1 className="lead">Loading Posts...</h1>}>
         <ProfileTimeLine resource={resource} />
       </Suspense>
+      <div className="fab-bottom">
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={handleRefresh}
+        >
+          Refresh
+        </button>
+      </div>
     </Suspense>
   );
 }
 
 function App() {
-  // Because, we now have the posts and user resources, inside resource
-  // move the resource to the top level
-  const [resource, setResource] = useState(initialResource);
-
-  const handleClick = () => {
-    const next = getNextId(resource.userId);
-    return setResource(fetchProfileData(next));
-  };
-
   return (
     <>
       <div className="container">
         <h1 className="display-2">Experimental</h1>
-        <ProfilePage resource={resource} />
-      </div>
-      <div className="fab-bottom">
-        <button type="button" className="btn btn-primary" onClick={handleClick}>
-          Next
-        </button>
+        <ProfilePage />
       </div>
     </>
   );
