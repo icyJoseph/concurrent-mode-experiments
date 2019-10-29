@@ -4,10 +4,18 @@ Implements all cases covered in the [experimental page](https://reactjs.org/docs
 
 ## Branches
 
-- fetch-on-render [old]
-- fetch-then-render [old]
-- render-as-you-fetch [new]
+Data fetching strategies:
+
+- fetch-on-render
+- fetch-then-render
+- render-as-you-fetch
+
+Race Conditions:
+
 - race-conditions-with-useEffect
 - race-conditions-withComponentDidUpdate
 - solving-race-conditions-with-suspense
+
+Error Boundary:
+
 - handling-errors
