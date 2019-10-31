@@ -7,12 +7,16 @@ const initialResource = fetchTranslation(initialQuery);
 function App() {
   const [query, setQuery] = useState(initialQuery);
   const [resource, setResource] = useState(initialResource);
-  const [startTransition, isPending] = useTransition({ timeoutMs: 3000 });
+  const [startTransition, isPending] = useTransition({ timeoutMs: 5000 });
 
+  // divide user blocking from the rest to provide immediate user feedback
   function handleChange(e) {
     const value = e.target.value;
+    // this does not need to Suspense (no Suspense boundary around it)
+    setQuery(value);
+
     startTransition(() => {
-      setQuery(value);
+      // this has a Suspend Boundary around it
       setResource(fetchTranslation(value));
     });
   }
@@ -22,7 +26,9 @@ function App() {
       <h1 className="display-2">Experimental</h1>
       <input value={query} onChange={handleChange} />
       <Suspense fallback={<p className="lead">Loading...</p>}>
-        <Translation resource={resource} />
+        <div className={isPending ? "is-pending" : ""}>
+          <Translation resource={resource} />
+        </div>
       </Suspense>
     </div>
   );
@@ -30,7 +36,7 @@ function App() {
 
 function Translation({ resource }) {
   return (
-    <p>
+    <p className="lead">
       <b>{resource.read()}</b>
     </p>
   );

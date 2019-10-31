@@ -7,7 +7,7 @@ export function fetchTranslation(text) {
     translate(
       text,
       {
-        to: "fr"
+        to: "es"
       },
       (err, res) => {
         if (err) {
@@ -45,6 +45,7 @@ function wrapPromise(promise) {
       } else if (status === "error") {
         throw result;
       } else if (status === "success") {
+        console.log('done')
         return result;
       }
     }

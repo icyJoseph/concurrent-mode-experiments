@@ -5,6 +5,10 @@
   text-align: center;
 }
 
+.is-pending {
+  color: "#777";
+}
+
 *[class^="display-"] {
   word-break: break-all;
 }
