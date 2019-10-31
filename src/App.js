@@ -5,7 +5,7 @@ import { fetchProfileData } from "./fakeApi";
 const initialResource = fetchProfileData();
 
 function Button({ children, className, onClick }) {
-  const [startTransition, isPending] = useTransition({ timeoutMs: 8000 });
+  const [startTransition, isPending] = useTransition({ timeoutMs: 4000 });
 
   function handleClick() {
     startTransition(() => onClick());
@@ -18,8 +18,13 @@ function Button({ children, className, onClick }) {
         className={`${className} btn-large`}
         onClick={handleClick}
       >
-        {isPending ? <Spinner /> : children}
+        {children}
       </button>
+      {isPending && (
+        <span className="delayedSpinner">
+          <Spinner />
+        </span>
+      )}
     </>
   );
 }

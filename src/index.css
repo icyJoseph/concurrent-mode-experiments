@@ -1,10 +1,12 @@
 .full-page,
-.fab-bottom {
+.fab-bottom,
+.delayedSpinner {
   position: absolute;
   width: 100%;
 }
 
-.full-page {
+.full-page,
+.delayedSpinner {
   top: 0;
   height: 100%;
   display: flex;
@@ -25,4 +27,15 @@
 
 .small {
   font-size: small;
+}
+
+.delayedSpinner {
+  animation: 0s linear 0.5s forwards makeVisible;
+  visibility: hidden;
+}
+
+@keyframes makeVisible {
+  to {
+    visibility: visible;
+  }
 }
