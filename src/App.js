@@ -1,4 +1,4 @@
-import React, { useState, Suspense } from "react";
+import React, { useState, Suspense, useTransition } from "react";
 import { fetchTranslation } from "./fakeApi";
 
 const initialQuery = "Hello, World!";
@@ -7,11 +7,14 @@ const initialResource = fetchTranslation(initialQuery);
 function App() {
   const [query, setQuery] = useState(initialQuery);
   const [resource, setResource] = useState(initialResource);
+  const [startTransition, isPending] = useTransition({ timeoutMs: 3000 });
 
   function handleChange(e) {
     const value = e.target.value;
-    setQuery(value);
-    setResource(fetchTranslation(value));
+    startTransition(() => {
+      setQuery(value);
+      setResource(fetchTranslation(value));
+    });
   }
 
   return (
