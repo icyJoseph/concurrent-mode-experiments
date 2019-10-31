@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useDeferredValue } from "react";
 import SlowList from "./SlowList";
 
 function App() {
   const [text, setText] = useState("hello");
+  const deferredText = useDeferredValue(text, { timeoutMs: 5000 });
 
   function handleChange(e) {
     setText(e.target.value);
@@ -14,7 +15,7 @@ function App() {
       <label>Type something: </label>
       <input value={text} onChange={handleChange} />
       <br />
-      <SlowList text={text} />
+      <SlowList text={deferredText} />
     </div>
   );
 }
