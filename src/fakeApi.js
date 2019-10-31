@@ -71,7 +71,7 @@ export function fetchUser(userId) {
         default:
           throw Error("Unknown user.");
       }
-    }, 2000 * Math.random());
+    }, 300);
   });
 }
 
@@ -148,6 +148,6 @@ export function fetchPosts(userId) {
         default:
           throw Error("Unknown user.");
       }
-    }, 2000 * Math.random());
+    }, 1000);
   });
 }
