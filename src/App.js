@@ -55,7 +55,9 @@ function ProfilePage({ resource, showProfile }) {
       <Suspense fallback={<h1 className="lead">Loading Posts...</h1>}>
         <ProfileTimeLine resource={resource} />
       </Suspense>
-      <ProfileTrivia resource={resource} />
+      <Suspense fallback={<p className="lead">Loading Trivia...</p>}>
+        <ProfileTrivia resource={resource} />
+      </Suspense>
     </>
   );
 }
