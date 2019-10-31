@@ -39,10 +39,10 @@ function ProfilePage({ resource }) {
   return (
     <>
       <ProfileDetails resource={resource} />
-      <Suspense fallback={<h1 className="lead">Loading Posts...</h1>}>
+      <Suspense
+        fallback={<h1 className="lead">Loading Posts and fun facts...</h1>}
+      >
         <ProfileTimeLine resource={resource} />
-      </Suspense>
-      <Suspense fallback={<h1 className="lead"> Loading fun facts...</h1>}>
         <ProfileTrivia resource={resource} />
       </Suspense>
     </>
