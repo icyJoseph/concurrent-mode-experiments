@@ -5,7 +5,8 @@
   "dependencies": {
     "react": "^0.0.0-experimental-f6b8d31a7",
     "react-dom": "^0.0.0-experimental-f6b8d31a7",
-    "react-scripts": "3.2.0"
+    "react-scripts": "3.2.0",
+    "yandex-translate": "^2.1.3"
   },
   "scripts": {
     "start": "react-scripts start",

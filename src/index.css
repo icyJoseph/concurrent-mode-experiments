@@ -4,3 +4,7 @@
   width: 100%;
   text-align: center;
 }
+
+*[class^="display-"] {
+  word-break: break-all;
+}
