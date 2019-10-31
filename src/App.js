@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { SuspenseList, Suspense } from "react";
 import { fetchProfileData } from "./fakeApi";
 
 const initialResource = fetchProfileData(0);
@@ -36,16 +36,18 @@ function ProfileTrivia({ resource }) {
 }
 
 function ProfilePage({ resource }) {
+  // revealOrder: "forwards", "backwards" or "together"
+  // tail="collapsed"
   return (
-    <>
+    <SuspenseList revealOrder="backwards" tail="collapsed">
       <ProfileDetails resource={resource} />
-      <Suspense
-        fallback={<h1 className="lead">Loading Posts and fun facts...</h1>}
-      >
+      <Suspense fallback={<h1 className="lead">Loading Posts...</h1>}>
         <ProfileTimeLine resource={resource} />
+      </Suspense>
+      <Suspense fallback={<h1 className="lead">Loadingfun facts...</h1>}>
         <ProfileTrivia resource={resource} />
       </Suspense>
-    </>
+    </SuspenseList>
   );
 }
 
@@ -53,7 +55,7 @@ function App() {
   return (
     <div className="container">
       <h1 className="display-2">Experimental</h1>
-      <Suspense fallback={<h1 className="lead">Loading Profile.</h1>}>
+      <Suspense fallback={<h1 className="lead">Loading Profile...</h1>}>
         <ProfilePage resource={initialResource} />
       </Suspense>
     </div>
