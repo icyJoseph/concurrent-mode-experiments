@@ -1,9 +1,11 @@
 export function fetchProfileData() {
   let userPromise = fetchUser();
   let postsPromise = fetchPosts();
+  let triviaPromise = fetchTrivia();
   return {
     user: wrapPromise(userPromise),
-    posts: wrapPromise(postsPromise)
+    posts: wrapPromise(postsPromise),
+    trivia: wrapPromise(triviaPromise)
   };
 }
 
@@ -84,5 +86,31 @@ function fetchPosts() {
       console.log("fetched posts");
       resolve(ringoPostsAtTheTime);
     }, 4000);
+  });
+}
+
+// Simulates a truly slow API call
+// imagine there's no way to make this any faster
+function fetchTrivia() {
+  console.log("fetching trivia...");
+  return new Promise(resolve => {
+    setTimeout(() => {
+      console.log("fetched trivia");
+      resolve([
+        {
+          id: 1,
+          text:
+            'The nickname "Ringo" came from his habit of wearing numerous rings.'
+        },
+        {
+          id: 2,
+          text: "Plays the drums left-handed with a right-handed drum set."
+        },
+        {
+          id: 3,
+          text: "Nominated for one Daytime Emmy Award, but did not win"
+        }
+      ]);
+    }, 5000);
   });
 }

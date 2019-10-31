@@ -13,7 +13,11 @@ function Button({ children, className, onClick }) {
 
   return (
     <>
-      <button type="button" className={`${className} btn-large`} onClick={handleClick}>
+      <button
+        type="button"
+        className={`${className} btn-large`}
+        onClick={handleClick}
+      >
         {isPending ? <Spinner /> : children}
       </button>
     </>
@@ -23,7 +27,7 @@ function Button({ children, className, onClick }) {
 function ProfileDetails({ resource }) {
   // throws Promise, and lets its fiber know that it is pending data
   const user = resource.user.read();
-  return <h1>{user.name}</h1>;
+  return <h1 className="display-4">{user.name}</h1>;
 }
 
 function ProfileTimeLine({ resource }) {
@@ -43,6 +47,7 @@ function ProfilePage({ resource, showProfile }) {
     <>
       <ProfileDetails resource={resource} />
       <div className="fab-bottom">
+        {/* Already wrapped in useTransition, and the experience is still bad!*/}
         <Button className="btn btn-info" onClick={showProfile}>
           Refresh
         </Button>
@@ -50,6 +55,21 @@ function ProfilePage({ resource, showProfile }) {
       <Suspense fallback={<h1 className="lead">Loading Posts...</h1>}>
         <ProfileTimeLine resource={resource} />
       </Suspense>
+      <ProfileTrivia resource={resource} />
+    </>
+  );
+}
+
+function ProfileTrivia({ resource }) {
+  const trivia = resource.trivia.read();
+  return (
+    <>
+      <h2 className="display-5">Fun Facts</h2>
+      <ul>
+        {trivia.map(({ id, text }) => (
+          <li key={id}>{text}</li>
+        ))}
+      </ul>
     </>
   );
 }
